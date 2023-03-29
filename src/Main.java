@@ -18,7 +18,7 @@ public class Main {
         // If we are connected to the server
         if (connectServer()) {
 
-            // comment here
+            // Write message and send it to Server
             sendToServer(writeJson());
 
             // comment here
