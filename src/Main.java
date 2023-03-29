@@ -1,6 +1,3 @@
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,40 +10,43 @@ public class Main {
     static String host = "localhost";
     static int port = 4333;
     static Socket socket = null;
-    static BufferedReader reader = null;
-    static BufferedWriter writer = null;
 
     public static void main(String[] args) {
 
         System.out.println("Welcome to Client!");
 
-        boolean ifConnectServer = connectServer();
+        // comment here
+        if (connectServer()) {
 
-        String message = createMessageToServer();
-        sendDataToServer(message);
-        getResponse();
+            // comment here
+            sendToServer(writeJson());
+
+            // comment here
+            getResponse();
+
+        }
 
     }
 
     static boolean connectServer() {
         try {
+            // comment here
             socket = new Socket(host, port);
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-
             System.out.println("Server connected...");
             return true;
 
         } catch (Exception e){
-            System.out.println("Unable to connect Server...");
+            System.out.println("Unable to connect the Server...");
             return false;
         }
     }
 
-    static String createMessageToServer() {
+    static String writeJson() {
+
+        // comment here
 
         System.out.println("Receive or post information?");
-        System.out.print("Type \"GET\" or \"POST\" and ENTER: ");
+        System.out.print("Type \"get\" or \"post\" and ENTER: ");
 
         Scanner sc = new Scanner(System.in);
 
@@ -60,12 +60,14 @@ public class Main {
 
             System.out.println("Ange \"CLASSIC\" eller \"SPORT\" ");
             motorcycleClass = sc.nextLine().toLowerCase();
+
             message = createPostMessageInJson(method, motorcycleClass);
 
         } else {
 
             System.out.println("Ange \"ALLA\",\"CLASSIC\" eller \"SPORT\" ");
             motorcycleClass = sc.nextLine().toLowerCase();
+
             message = createGetMessageInJson(method, motorcycleClass);
 
         }
@@ -74,12 +76,9 @@ public class Main {
     }
 
     static String createGetMessageInJson(String method, String motorcycleType) {
-
         try {
+
             JSONObject clientObj = new JSONObject();
-            JSONObject motorcycle = new JSONObject();
-            JSONObject motorcycleClass = new JSONObject();
-            JSONObject motorcycleSpecs = new JSONObject();
 
             clientObj.put("HTTPMethod", method);
             clientObj.put("ContentType", "application/json");
@@ -95,8 +94,10 @@ public class Main {
     }
 
     static String createPostMessageInJson(String method, String motorcycleType) {
-
         try {
+
+            // comment here
+
             JSONObject clientObj = new JSONObject();
             JSONObject motorcycle = new JSONObject();
             JSONObject motorcycleClass = new JSONObject();
@@ -145,9 +146,11 @@ public class Main {
         }
     }
 
-    static void sendDataToServer(String message) {
+    static void sendToServer(String message) {
         try {
 
+            // comment here
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             System.out.println("Sending this to Server: " + message);
             writer.write(message);
             writer.newLine();
@@ -160,20 +163,18 @@ public class Main {
 
     static void getResponse(){
         try {
-            //Hämta response från server
+
+            // comment here
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String resp = reader.readLine();
             System.out.println("Response: " + resp);
 
-            //Init Parser för att parsa till JSON Objekt
             JSONParser parser = new JSONParser();
-
-            //Skapar ett JSON objekt från server respons
             JSONObject serverResponse = (JSONObject) parser.parse(resp);
 
             String httpStatusCode = serverResponse.get("httpStatusCode").toString();
 
             if (httpStatusCode.equals("200")) {
-                String testReturn = "";
 
                 // Hämta JSON array från "Body" attributet
                 JSONArray data = (JSONArray) parser.parse((String) serverResponse.get("Body"));
@@ -184,17 +185,19 @@ public class Main {
                     System.out.println(motorcycle.get("Model"));
                     // testReturn += motorcycle.get("Model");
                 }
+
             } else if (httpStatusCode.equals("202")) {
+
                 System.out.println("Uppladdningen lyckats!");
+
             } else {
-                System.out.println("Tyvärr så Servern har tekniska problem, vänligen försök igen senare.");
+
+                System.out.println("Tekniska problem hos Server, try again later.");
+
             }
 
-            // OBS Body från Server innehåller bara data, inga klass
-
-
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("There's error with response by Server");
         }
     }
 }
