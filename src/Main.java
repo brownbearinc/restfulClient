@@ -183,7 +183,6 @@ public class Main {
                 for (Object obj : data) {
                     JSONObject motorcycle = (JSONObject) obj;
                     System.out.println(motorcycle.get("Model"));
-                    // testReturn += motorcycle.get("Model");
                 }
 
             } else if (httpStatusCode.equals("202")) {
