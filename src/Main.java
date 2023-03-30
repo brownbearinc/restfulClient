@@ -15,8 +15,11 @@ public class Main {
 
         System.out.println("Welcome to Client!");
 
+        // Run socket with host and port
+        socket = connectServer();
+
         // If we are connected to the server
-        if (connectServer()) {
+        if (socket != null) {
 
             // Write message and send it to Server
             sendToServer(writeJson());
@@ -25,19 +28,19 @@ public class Main {
             getResponse();
 
         }
-
     }
 
-    static boolean connectServer() {
+    static Socket connectServer() {
         try {
-            // comment here
+
             socket = new Socket(host, port);
             System.out.println("Server connected...");
-            return true;
+            return socket;
 
-        } catch (Exception e){
-            System.out.println("Unable to connect the Server...");
-            return false;
+        } catch (Exception e) {
+
+            System.out.println("Socket is null. Connection failed.");
+            return null;
         }
     }
 
