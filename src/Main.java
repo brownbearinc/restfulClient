@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Main {
 
     static String host = "localhost";
-    static int port = 4333;
+    static int port = 4444;
     static Socket socket = null;
 
     public static void main(String[] args) {
@@ -21,11 +21,12 @@ public class Main {
         // If we are connected to the server
         if (socket != null) {
 
+            // TODO return string
             // Write message and send it to Server
-            sendToServer(writeJson());
+            BufferedReader reader = sendToServer(writeJson());
 
             // comment here
-            getResponse();
+            getResponse(reader);
 
         }
     }
@@ -149,7 +150,7 @@ public class Main {
         }
     }
 
-    static void sendToServer(String message) {
+    static BufferedReader sendToServer(String message) {
         try {
 
             // comment here
@@ -159,17 +160,21 @@ public class Main {
             writer.newLine();
             writer.flush();
 
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            return reader;
+
         } catch (Exception e) {
             System.out.println("Failure at try send a message to server: " + e.getMessage());
+            return null;
         }
     }
 
-    static void getResponse(){
+    static void getResponse(BufferedReader reader){
         try {
 
-            // comment here
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String resp = reader.readLine();
+            // comment here
             System.out.println("Response: " + resp);
 
             JSONParser parser = new JSONParser();
