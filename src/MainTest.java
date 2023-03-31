@@ -24,16 +24,22 @@ class MainTest {
         Socket socket = Main.connectServer();
         assertNotNull(socket, "Socket is null. Connection failed.");
     }
-
     @Test
-    void writeJson() {
+    void testCreateGetMessageInJson() {
+        // Skapar en get förfråga
+        String method = "GET";
+        String motorcycleType = "sport";
+        String expectedJson = "{\"URLParametrar\":\"\\/sport\",\"ContentType\":\"application\\/json\",\"HTTPMethod\":\"GET\"}";
+
+        String actualJson = Main.createGetMessageInJson(method, motorcycleType);
+
+        assertEquals(expectedJson, actualJson);
+    }
+    @Test
+    void packUpResponse() {
+        // Här testar vi en likadan response som man får från servern efter att ha skickat in "post"-metoden
+        String resp = "{\"Body\":\"successfully\",\"httpStatusCode\":\"202\"}";
+        assertTrue(Main.packUpResponse(resp));
     }
 
-    @Test
-    void createGetMessageInJson() {
-    }
-
-    @Test
-    void createPostMessageInJson() {
-    }
 }

@@ -18,14 +18,14 @@ public class Main {
         // Run socket with host and port
         socket = connectServer();
 
-        // If we are connected to the server
+        // If we are connected to the Server
         if (socket != null) {
 
-            // Write message and send it to Server
+            // Write message, send message to Server and get response
             String resp = sendToServer(writeJson());
 
-            // comment here
-            getResponse(resp);
+            // Packup the response
+            packUpResponse(resp);
 
         }
     }
@@ -85,7 +85,6 @@ public class Main {
 
             clientObj.put("HTTPMethod", method);
             clientObj.put("ContentType", "application/json");
-
             clientObj.put("URLParametrar", "/" + motorcycleType );
 
             return clientObj.toJSONString();
@@ -141,6 +140,8 @@ public class Main {
             motorcycle.put("motorcycle", motorcycleClass);
             clientObj.put("Body", motorcycle);
 
+            System.out.println(clientObj.toJSONString());
+
             return clientObj.toJSONString();
 
         } catch (Exception e) {
@@ -170,7 +171,7 @@ public class Main {
         }
     }
 
-    static void getResponse(String resp){
+    static boolean packUpResponse(String resp){
         try {
 
             // comment here
@@ -191,19 +192,23 @@ public class Main {
                     JSONObject motorcycle = (JSONObject) obj;
                     System.out.println(motorcycle.get("Model"));
                 }
+                return true;
 
             } else if (httpStatusCode.equals("202")) {
 
                 System.out.println("Uppladdningen lyckats!");
+                return true;
 
             } else {
 
                 System.out.println("Tekniska problem hos Server, try again later.");
+                return false;
 
             }
 
         } catch (Exception e) {
             System.out.println("There's error with response by Server");
+            return false;
         }
     }
 }
