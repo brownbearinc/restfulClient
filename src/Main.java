@@ -21,12 +21,11 @@ public class Main {
         // If we are connected to the server
         if (socket != null) {
 
-            // TODO return string
             // Write message and send it to Server
-            BufferedReader reader = sendToServer(writeJson());
+            String resp = sendToServer(writeJson());
 
             // comment here
-            getResponse(reader);
+            getResponse(resp);
 
         }
     }
@@ -150,7 +149,7 @@ public class Main {
         }
     }
 
-    static BufferedReader sendToServer(String message) {
+    static String sendToServer(String message) {
         try {
 
             // comment here
@@ -161,8 +160,9 @@ public class Main {
             writer.flush();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String resp = reader.readLine();
 
-            return reader;
+            return resp;
 
         } catch (Exception e) {
             System.out.println("Failure at try send a message to server: " + e.getMessage());
@@ -170,10 +170,9 @@ public class Main {
         }
     }
 
-    static void getResponse(BufferedReader reader){
+    static void getResponse(String resp){
         try {
 
-            String resp = reader.readLine();
             // comment here
             System.out.println("Response: " + resp);
 
