@@ -63,13 +63,13 @@ public class Main {
             }
         }
 
-        System.out.println("What class?");
-        System.out.println("Type \"Classic\" or \"Sport\" ");
-        motorcycleClass = sc.nextLine().toLowerCase();
-
         if (method.equals("post")) {
 
             while (true) {
+
+                System.out.println("What class?");
+                System.out.println("Type \"Classic\" or \"Sport\" ");
+                motorcycleClass = sc.nextLine().toLowerCase();
 
                 if (motorcycleClass.equals("classic") || motorcycleClass.equals("sport")) {
                     break;
@@ -83,6 +83,10 @@ public class Main {
         } else {
 
             while (true) {
+
+                System.out.println("What class?");
+                System.out.println("Type \"Classic\" or \"Sport\" ");
+                motorcycleClass = sc.nextLine().toLowerCase();
 
                 if (motorcycleClass.equals("classic") || motorcycleClass.equals("sport")) {
                     break;
@@ -157,7 +161,7 @@ public class Main {
             motorcycle.put("motorcycle", motorcycleClass);
             clientObj.put("Body", motorcycle);
 
-            System.out.println(clientObj.toJSONString());
+            System.out.println(clientObj);
 
             return clientObj.toJSONString();
 
