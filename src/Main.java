@@ -25,7 +25,7 @@ public class Main {
             String resp = sendToServer(writeJson());
 
             // Packup the response
-            packUpResponse(resp);
+            unpackResponse(resp);
 
         }
     }
@@ -45,40 +45,59 @@ public class Main {
     }
 
     static String writeJson() {
-
-        // comment here
-
-        System.out.println("Receive or post information?");
-        System.out.print("Type \"get\" or \"post\" and ENTER: ");
-
         Scanner sc = new Scanner(System.in);
-
-        String method = sc.nextLine().toLowerCase();
+        String method;
         String message;
         String motorcycleClass;
 
-        System.out.println("Vilken klass?");
+        while (true) {
+
+            System.out.println("Receive or post information?");
+            System.out.print("Type \"get\" or \"post\" and ENTER: ");
+            method = sc.nextLine().toLowerCase();
+
+            if (method.equals("get") || method.equals("post")) {
+                break;
+            } else {
+                System.out.println("Invalid input. Please try again.");
+            }
+        }
+
+        System.out.println("What class?");
+        System.out.println("Type \"Classic\" or \"Sport\" ");
+        motorcycleClass = sc.nextLine().toLowerCase();
 
         if (method.equals("post")) {
 
-            System.out.println("Ange \"CLASSIC\" eller \"SPORT\" ");
-            motorcycleClass = sc.nextLine().toLowerCase();
+            while (true) {
 
-            message = createPostMessageInJson(method, motorcycleClass);
+                if (motorcycleClass.equals("classic") || motorcycleClass.equals("sport")) {
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please try again.");
+                }
+            }
+            // Call method with input values
+            message = createPostMessageAsJson(method, motorcycleClass);
 
         } else {
 
-            System.out.println("Ange \"ALLA\",\"CLASSIC\" eller \"SPORT\" ");
-            motorcycleClass = sc.nextLine().toLowerCase();
+            while (true) {
 
-            message = createGetMessageInJson(method, motorcycleClass);
+                if (motorcycleClass.equals("classic") || motorcycleClass.equals("sport")) {
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please try again.");
+                }
+            }
 
+            // Call method with input values
+            message = createGetMessageAsJson(method, motorcycleClass);
         }
 
         return message;
     }
-
-    static String createGetMessageInJson(String method, String motorcycleType) {
+    static String createGetMessageAsJson(String method, String motorcycleType) {
         try {
 
             JSONObject clientObj = new JSONObject();
@@ -95,10 +114,8 @@ public class Main {
         }
     }
 
-    static String createPostMessageInJson(String method, String motorcycleType) {
+    static String createPostMessageAsJson(String method, String motorcycleType) {
         try {
-
-            // comment here
 
             JSONObject clientObj = new JSONObject();
             JSONObject motorcycle = new JSONObject();
@@ -109,7 +126,7 @@ public class Main {
             clientObj.put("ContentType", "application/json");
             clientObj.put("URLParametrar", "/" + motorcycleType);
 
-            // Request user about data
+            // Ask the user for data
             Scanner sc = new Scanner(System.in);
             System.out.print("Make: ");
             String make = sc.nextLine();
@@ -171,7 +188,7 @@ public class Main {
         }
     }
 
-    static boolean packUpResponse(String resp){
+    static boolean unpackResponse(String resp){
         try {
 
             // comment here
@@ -184,10 +201,10 @@ public class Main {
 
             if (httpStatusCode.equals("200")) {
 
-                // Hämta JSON array från "Body" attributet
+                // Fetch JSON array from the "Body" attribute
                 JSONArray data = (JSONArray) parser.parse((String) serverResponse.get("Body"));
 
-                // Loopa igenom varje JSON objekt i arrayen
+                // Loop through each JSON object in the array
                 for (Object obj : data) {
                     JSONObject motorcycle = (JSONObject) obj;
                     System.out.println(motorcycle.get("Model"));
@@ -196,12 +213,12 @@ public class Main {
 
             } else if (httpStatusCode.equals("202")) {
 
-                System.out.println("Uppladdningen lyckats!");
+                System.out.println("Upload successful!");
                 return true;
 
             } else {
 
-                System.out.println("Tekniska problem hos Server, try again later.");
+                System.out.println("Technical problem with the server, please try again later.");
                 return false;
 
             }

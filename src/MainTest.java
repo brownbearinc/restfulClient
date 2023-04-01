@@ -19,6 +19,8 @@ class MainTest {
         System.out.println("After test");
     }
 
+    // -Er server skall bli testade via testmetoder, minst en för GET och en för POST
+
     @Test
     void connectServer() throws IOException {
         Socket socket = Main.connectServer();
@@ -30,8 +32,7 @@ class MainTest {
         String method = "GET";
         String motorcycleType = "sport";
         String expectedJson = "{\"URLParametrar\":\"\\/sport\",\"ContentType\":\"application\\/json\",\"HTTPMethod\":\"GET\"}";
-
-        String actualJson = Main.createGetMessageInJson(method, motorcycleType);
+        String actualJson = Main.createGetMessageAsJson(method, motorcycleType);
 
         assertEquals(expectedJson, actualJson);
     }
@@ -39,7 +40,7 @@ class MainTest {
     void packUpResponse() {
         // Här testar vi en likadan response som man får från servern efter att ha skickat in "post"-metoden
         String resp = "{\"Body\":\"successfully\",\"httpStatusCode\":\"202\"}";
-        assertTrue(Main.packUpResponse(resp));
+        assertTrue(Main.unpackResponse(resp));
     }
 
 }
